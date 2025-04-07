@@ -10,7 +10,8 @@
 // -----------  ----------- -----------------------
 // 4-April-2025  A. Reinert  Initial Commit
 // 7-April-2025  A. Reinert  Changed motor pins to board config
-//
+// 7-April-2025  A. Reinert  Added monitor speed and encoder ini
+// 7-April-2025  A. Reinert  Added all serial mointor commands
 // ****************************************************************************
 
 // Include Files
@@ -263,6 +264,25 @@ void processCommand()
         case 'M': // Manual control mode
             Serial.println("Manual control mode activated");
             // Add manual control logic here
+            break;
+
+        case 'I': // System information display
+            Serial.println("System Information:");
+            Serial.print("Motor State: ");
+            Serial.println(motorRunning ? "Running" : "Stopped");
+            Serial.print("Motor RPM: ");
+            Serial.println(motorRPM, 2);
+            Serial.print("Encoder Position: ");
+            Serial.println(encoderPosition);
+            break;
+
+        case 'H': // Help command
+            Serial.println("Available Commands:");
+            Serial.println("F<speed> - Set forward speed (0-100%)");
+            Serial.println("R<speed> - Set reverse speed (0-100%)");
+            Serial.println("S - Stop motor");
+            Serial.println("I - System information display");
+            Serial.println("H - Help command (displays available commands)");
             break;
 
         default:
