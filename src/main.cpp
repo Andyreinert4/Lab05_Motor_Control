@@ -13,6 +13,7 @@
 // 7-April-2025  A. Reinert  Added monitor speed and encoder ini
 // 7-April-2025  A. Reinert  Added all serial mointor commands
 // 7-April-2025  A. Reinert  Added update time for serial monitor
+// 7-April-2025  A. Reinert  Modified RPM calculation for serial monitor
 // ****************************************************************************
 
 // Include Files
@@ -339,14 +340,13 @@ void IRAM_ATTR handleEncoder()
 }
 
 // Calculate motor speed in RPM
-void calculateSpeed()
-{
-    if (millis() - lastSpeedCalc >= SPEED_INTERVAL)
-    {
-        float timeElapsed = (millis() - lastSpeedCalc) / 1000.0;
+void calculateSpeed() {
+    if (millis() - lastSpeedCalc >= SPEED_INTERVAL) {
+        float timeElapsed = (millis() - lastSpeedCalc) / 1000.0; // Convert to seconds
         long positionChange = encoderPosition - lastPosition;
-        float instantRPM = (positionChange / PULSES_PER_REV) * (60.0 / timeElapsed);
-        motorRPM = calculateAverageRPM(instantRPM);
+        float instantRPM = (positionChange / PULSES_PER_REV) * (60.0 / timeElapsed); // Calculate RPM
+
+        motorRPM = calculateAverageRPM(instantRPM); // Smooth the RPM value
 
         lastSpeedCalc = millis();
         lastPosition = encoderPosition;
