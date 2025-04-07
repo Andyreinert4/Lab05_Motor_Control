@@ -8,8 +8,8 @@
 // Revision History:
 // When         Who         Description of change
 // -----------  ----------- -----------------------
-// 4-April-2025  A. Reinert Initial Commit
-//
+// 4-April-2025  A. Reinert  Initial Commit
+// 7-April-2025  A. Reinert  Changed motor pins to board config
 //
 // ****************************************************************************
 
@@ -33,7 +33,7 @@ const uint16_t PWM_FREQ = 5000;   // PWM frequency (Hz)
 const uint8_t PWM_RESOLUTION = 8; // 8-bit resolution (0-255)
 
 // Motor control pins
-const uint8_t IN1 = 25;           // L298N input 1
+const uint8_t IN1 = 27;           // L298N input 1
 const uint8_t IN2 = 26;           // L298N input 2
 const uint8_t ENA = 14;           // L298N enable A (PWM)
 
