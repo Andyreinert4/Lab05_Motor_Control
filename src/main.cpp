@@ -15,6 +15,7 @@
 // 7-April-2025  A. Reinert  Added update time for serial monitor
 // 7-April-2025  A. Reinert  Modified RPM calculation for serial monitor
 // 7-April-2025  A. Reinert  Modified motor serial print to say on or stopped
+// 7-April-2025  A. Reinert  Added button control for motor stop
 // ****************************************************************************
 
 // Include Files
@@ -40,6 +41,7 @@ const uint8_t PWM_RESOLUTION = 8; // 8-bit resolution (0-255)
 const uint8_t IN1 = 27;           // L298N input 1
 const uint8_t IN2 = 26;           // L298N input 2
 const uint8_t ENA = 14;           // L298N enable A (PWM)
+const uint8_t ButtonPin = 17;     // Button for E stop
 
 // Encoder configuration
 const uint8_t ENCODER_A = 36;      // Encoder A channel (VP)
@@ -173,31 +175,20 @@ void loop()
         commandComplete = false; // Reset command complete flag
     }
 
-    // Check if button is pressed and toggle motor state
+    // Check if button is pressed and stop the motor
     if (motorButton.isPressed())
     {
-        motorRunning = !motorRunning; // Toggle motor state
-        setMotorState(motorRunning);  // Apply the motor state
+        setMotorState(false); // Stop the motor
+        Serial.println("Motor stopped by button press");
+    }
 
-        if (motorRunning)
+    // Check if button on pin 17 is pressed and stop the motor
+    if (digitalRead(ButtonPin) == HIGH) // Assuming active HIGH logic for the button
+    {
+        if (motorRunning) // Only stop the motor if it's running
         {
-            // Reset position when starting motor
-            encoderPosition = 0;
-            lastPosition = 0;
-
-            // Reset RPM array
-            for (int i = 0; i < RPM_ARRAY_SIZE; i++)
-            {
-                rpmArray[i] = 0.0;
-            }
-            rpmIndex = 0;
-            rpmArrayFull = false;
-
-            Serial.println("Motor turned ON");
-        }
-        else
-        {
-            Serial.println("Motor turned OFF");
+            setMotorState(false); // Stop the motor
+            Serial.println("Motor stopped by button press on pin 17");
         }
     }
 
@@ -379,6 +370,7 @@ float calculateAverageRPM(float newRPM)
 // Set motor state (on/off)
 void setMotorState(bool running)
 {
+    motorRunning = running; // Ensure motorRunning reflects the actual state
     if (running)
     {
         digitalWrite(IN1, HIGH);
