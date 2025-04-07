@@ -14,6 +14,7 @@
 // 7-April-2025  A. Reinert  Added all serial mointor commands
 // 7-April-2025  A. Reinert  Added update time for serial monitor
 // 7-April-2025  A. Reinert  Modified RPM calculation for serial monitor
+// 7-April-2025  A. Reinert  Modified motor serial print to say on or stopped
 // ****************************************************************************
 
 // Include Files
@@ -305,9 +306,9 @@ void displayStatus()
         lastStatusUpdate = millis();
 
         Serial.print("Motor State: ");
-        Serial.println(motorRunning ? "Running" : "Stopped");
+        Serial.println(motorRunning ? "On" : "Stopped"); // Updated motor state messages
         Serial.print("Motor RPM: ");
-        Serial.println(motorRPM, 2);
+        Serial.println(motorRunning ? motorRPM : 0.0, 2); // Show RPM only if running
         Serial.print("Encoder Position: ");
         Serial.println(encoderPosition);
     }
