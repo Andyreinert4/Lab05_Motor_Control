@@ -12,6 +12,7 @@
 // 7-April-2025  A. Reinert  Changed motor pins to board config
 // 7-April-2025  A. Reinert  Added monitor speed and encoder ini
 // 7-April-2025  A. Reinert  Added all serial mointor commands
+// 7-April-2025  A. Reinert  Added update time for serial monitor
 // ****************************************************************************
 
 // Include Files
@@ -69,6 +70,10 @@ Debounce motorButton(BUTTON, HIGH);
 // Command processing variables
 String command = "";          // To store the complete command
 bool commandComplete = false; // Flag to indicate command is complete
+
+// Status update timing
+static unsigned long lastStatusUpdate = 0;
+const unsigned long STATUS_UPDATE_INTERVAL = 2000; // 2 seconds
 
 // Function Prototypes
 // *************************************************************************
@@ -295,12 +300,16 @@ void processCommand()
 // Display system status
 void displayStatus()
 {
-    Serial.print("Motor State: ");
-    Serial.println(motorRunning ? "Running" : "Stopped");
-    Serial.print("Motor RPM: ");
-    Serial.println(motorRPM, 2);
-    Serial.print("Encoder Position: ");
-    Serial.println(encoderPosition);
+    if (millis() - lastStatusUpdate >= STATUS_UPDATE_INTERVAL) {
+        lastStatusUpdate = millis();
+
+        Serial.print("Motor State: ");
+        Serial.println(motorRunning ? "Running" : "Stopped");
+        Serial.print("Motor RPM: ");
+        Serial.println(motorRPM, 2);
+        Serial.print("Encoder Position: ");
+        Serial.println(encoderPosition);
+    }
 }
 
 // Interrupt handler for encoder state changes
